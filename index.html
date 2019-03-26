@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>React Practice</title>
+	<link rel="stylesheet" href="css/style.css">
+	    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="root">..</div>
+	<script type="text/babel">
+		(() => {
+			function showMessage() {
+				alert('hello');
+			}
+     function Counter (props) {
+      return (
+          <li style={{backgroundColor:props.counter.color}} onClick={() =>
+            props.addStr(props.counter)
+          }>{props.counter.str}</li>
+      );
+     }
+    function CounterList (props) {
+      const counters = props.counters.map(counter => {
+        return (
+          <Counter 
+            counter={counter}
+            key={counter.id}
+            addStr={props.addStr}
+          />
+        );
+      });
+      return (
+        <ul>
+          {counters}
+        </ul>
+      );
+    }
+    class App extends React.Component {
+      constructor() {
+        super();
+        this.state = {
+          counters: [
+           {id: "C", count: 0, color: "lightskyblue", str: "C"}, 
+           {id: "O", count: 0, color: "paleturquoise", str: "O"}, 
+           {id: "S", count: 0, color: "pink", str: "S"}, 
+          ]
+          ,total:0
+          ,totalStr:""
+        };
+        this.addStr = this.addStr.bind(this);
+      }
+      addStr(counter) {
+        this.setState(prevState => {
+          const counters = prevState.counters.map(counter => {
+            return {id: counter.id, count: counter.count, color: counter.color, str: counter.str};
+          });
+          const pos = counters.map(counter => {
+            return counter.id;
+          }).indexOf(counter.id);
+          return {
+            counters:counters,
+            total: prevState.total + 1,
+            totalStr: prevState.totalStr + counters[pos].str 
+          };
+        });
+      }
+      render () {
+        return (
+          <div className="container">
+            <CounterList 
+              counters={this.state.counters}
+              addStr={this.addStr}/>
+            <div>Playing: {this.state.totalStr}</div>
+          </div>
+        );
+      }
+    }
+			const name = "taguchi";
+			ReactDOM.render(
+        <App/>,
+        document.getElementById('root')
+			);
+		})();
+	</script>
+</body>
+</html>
